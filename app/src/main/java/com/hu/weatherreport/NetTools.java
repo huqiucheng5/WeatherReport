@@ -1,6 +1,7 @@
 package com.hu.weatherreport;
 
 import android.content.Context;
+import android.util.Base64;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
@@ -21,7 +22,8 @@ public class NetTools {
 
     private static final String TAG = "NetTools";
     private static final boolean DEBUG = false;
-    private static String pathHead = "http://mirror.micronavi.cn/weather/mainquery.php?city=";
+    //    private static String pathHead = "http://mirror.micronavi.cn/weather/mainquery.php?city=";
+    private static String pathHead = "aHR0cDovL21pcnJvci5taWNyb25hdmkuY24vd2VhdGhlci9tYWlucXVlcnkucGhwP2NpdHk9";
     private static NetTools netTools;
     private RequestQueue mQueue;
 
@@ -39,7 +41,8 @@ public class NetTools {
     public void getString(String cityName) {
         String path = "";
         try {
-            path = pathHead + URLEncoder.encode(cityName, "utf-8");
+            path = getPathHead(pathHead) + URLEncoder.encode(cityName, "utf-8");
+            log("path = "+path);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             if (null != listener) {
@@ -89,14 +92,15 @@ public class NetTools {
         if (null != netTools) {
             netTools = null;
         }
+    }
 
-
+    private String getPathHead(String encodedString) {
+        return new String(Base64.decode(encodedString, Base64.DEFAULT));
     }
 
     private void log(String str) {
         if (DEBUG) Log.i(TAG, str);
     }
-
 
     private RequestNetDataResultListener listener;
 
